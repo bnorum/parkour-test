@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRaycastDistance);
         if (isGrounded)
         {
-            velocity.y = -0.5f;
+            velocity.y = 0f;
             jumpsRemaining = maxJumps;
 
             if (Input.GetButtonDown("Jump"))
