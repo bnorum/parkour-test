@@ -17,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector3 velocity;
 
-
+    //dash
     public float dashSpeedMultiplier = 2.0f; 
     public float dashDuration = 0.5f; 
     public float dashCooldown = 2.0f; 
