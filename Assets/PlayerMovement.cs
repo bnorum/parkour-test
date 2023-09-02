@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     public float dashDuration = 0.5f; 
     public float dashCooldown = 2.0f; 
     private float lastDashTime = -999f;
+    public GameObject dashlines;
 
 
     void Start()
@@ -92,7 +93,9 @@ public class PlayerMovement : MonoBehaviour
     {
         float originalSpeed = Speed;
         Speed *= dashSpeedMultiplier;
+        dashlines.SetActive(true);
         yield return new WaitForSeconds(dashDuration);
+        dashlines.SetActive(false);
         Speed = originalSpeed;
     }//dash
 
