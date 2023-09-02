@@ -39,7 +39,6 @@ public class PlayerMovement : MonoBehaviour
         Movement.y = 0f;
 
         Controller.Move(Movement);
-
         if (Movement.magnitude != 0f)
         {
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * Cam.GetComponent<CameraMove>().sensivity * Time.deltaTime);
@@ -49,10 +48,8 @@ public class PlayerMovement : MonoBehaviour
             CamRotation.z = 0f;
 
             transform.rotation = Quaternion.Lerp(transform.rotation, CamRotation, 0.1f);
-        }//if
-        //end movement
+        }//movement
 
-        // Jumping
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRaycastDistance);
         if (isGrounded)
         {
@@ -72,36 +69,30 @@ public class PlayerMovement : MonoBehaviour
             {
                 Jump();
                 jumpsRemaining--;
-            }
-        }
-        //end jumping
+            }//if
+        }//jump input
 
-        // Dash
+
         if (Input.GetButtonDown("Fire1") && Time.time > lastDashTime + dashCooldown)
         {
             lastDashTime = Time.time;
             StartCoroutine(Dash());
-        }
-        //enddash
-
-
+        }//dash input
         
 
         Controller.Move(velocity * Time.deltaTime);
     }//update
-
-   
+    
     private void Jump()
     {
         velocity.y = Mathf.Sqrt(2 * jumpForce * gravity);
-    }
+    }//jump
+
     private IEnumerator Dash()
     {
         float originalSpeed = Speed;
         Speed *= dashSpeedMultiplier;
-
         yield return new WaitForSeconds(dashDuration);
-
         Speed = originalSpeed;
     }//dash
 
