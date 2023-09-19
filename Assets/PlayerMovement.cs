@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     CharacterController Controller;
+    private float ogSOffset;
     public float Speed;
     public Transform Cam;
 
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         Controller = GetComponent<CharacterController>();
+        ogSOffset = Controller.stepOffset;
     }
 
     void Update()
@@ -54,7 +56,8 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRaycastDistance);
         if (isGrounded)
         {
-            velocity.y = 0f;
+            velocity.y = -0.5f;
+            Controller.stepOffset = ogSOffset;
             jumpsRemaining = maxJumps;
 
             if (Input.GetButtonDown("Jump"))
@@ -65,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             velocity.y -= gravity * Time.deltaTime;
+            Controller.stepOffset = 0;
 
             if (Input.GetButtonDown("Jump") && jumpsRemaining > 0)
             {
@@ -87,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         velocity.y = Mathf.Sqrt(2 * jumpForce * gravity);
+        isGrounded = false;
     }//jump
 
     private IEnumerator Dash()
