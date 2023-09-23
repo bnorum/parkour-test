@@ -54,6 +54,9 @@ public class PlayerMovement : MonoBehaviour
         }//movement
 
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRaycastDistance);
+
+
+
         if (isGrounded)
         {
             velocity.y = -0.5f;
@@ -104,4 +107,18 @@ public class PlayerMovement : MonoBehaviour
         Speed = originalSpeed;
     }//dash
 
+
+
+
+    private void Jump() {
+            Movement.y = Mathf.Sqrt(2 * gravity * jumpForce);
+
+    }
 }
+
+
+
+bool isGrounded;
+float rayDist= 0.9f;
+
+isGrounded = Physics.Raycast(transform.position, Vector3.down, rayDist);
