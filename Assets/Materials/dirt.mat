@@ -8,11 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: dirt
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 7cd5de0b884b14f88ab763ef465e1799, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
+  - _CLIPPED_ON
+  - _SEGMENTED_ON
   - _SHADING_STYLE_SKIN_AND_TEXTILES
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -92,7 +94,11 @@ Material:
     m_Floats:
     - Normal_Blend: 0.5
     - _AdditionalLightCutoffPoint: 0.8
+    - _AmbientCol: 0
     - _BumpScale: 1
+    - _Clipped: 1
+    - _ColBright: 0
+    - _ColIntense: 1
     - _Cutoff: 0.5
     - _DecalMeshBiasType: 0
     - _DecalMeshDepthBias: 0
@@ -104,9 +110,14 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _Lumin: 0
+    - _MaxLight: 1
     - _Metallic: 0
+    - _MinLight: 0.8
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _Offset: 0
+    - _OtlWidth: 1
     - _OutlineWidth: 0.15
     - _PaintbrushStrokesAngle: 40
     - _PaintbrushStrokesSize: 1
@@ -116,9 +127,14 @@ Material:
     - _RimStep: 0.65
     - _RimStepSmooth: 0.4
     - _SHADING_STYLE: 0
+    - _Segmented: 1
     - _ShadowStep: 0.5
     - _ShadowStepSmooth: 0.04
     - _ShadowsFloor: 0.25
+    - _ShnIntense: 0
+    - _ShnOverlap: 0
+    - _ShnRange: 0.15
+    - _ShnSmooth: 0
     - _Smoothness: 0.4
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -126,6 +142,8 @@ Material:
     - _SpecularStep: 0.6
     - _SpecularStepSmooth: 0.05
     - _SrcBlend: 1
+    - _Steps: 3
+    - _StpSmooth: 0
     - _StrongRimStrength: 1
     - _ToonCutoffPoint: 0.2
     - _UVSec: 0
@@ -135,8 +153,10 @@ Material:
     - _BaseColor: {r: 0.4811321, g: 0.32115015, b: 0.13389997, a: 1}
     - _Color: {r: 0.5, g: 0.404541, b: 0.2476415, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _OtlColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _ShnColor: {r: 0, g: 0.34919024, b: 1, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &2647003276025199356
