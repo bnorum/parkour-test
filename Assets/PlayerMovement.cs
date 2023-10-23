@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isGrounded = true;
     public int maxJumps = 2; //doesnt include initial jump
     private int jumpsRemaining;
+    public mushJump MushJump;
 
     private Vector3 velocity;
 
@@ -22,9 +24,9 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeedMultiplier = 2.0f; 
     public float dashDuration = 0.5f; 
     public float dashCooldown = 2.0f; 
-    private float lastDashTime = -999f;
     public GameObject dashlines;
-
+    public Slider visualCooldownDash;
+    public LayerMask groundMask;
 
     void Start()
     {
@@ -40,8 +42,9 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 Movement = Cam.transform.right * Horizontal + Cam.transform.forward * Vertical;
         Movement.y = 0f;
-
+        
         Controller.Move(Movement);
+
         if (Movement.magnitude != 0f)
         {
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * Cam.GetComponent<CameraMove>().sensivity * Time.deltaTime);
@@ -51,74 +54,67 @@ public class PlayerMovement : MonoBehaviour
             CamRotation.z = 0f;
 
             transform.rotation = Quaternion.Lerp(transform.rotation, CamRotation, 0.1f);
-        }//movement
+        }//character rotation
 
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRaycastDistance);
-
-
-
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRaycastDistance, groundMask);
         if (isGrounded)
         {
-            velocity.y = -0.5f;
+            if (!MushJump.getInMush()) velocity.y = -0.5f;
             Controller.stepOffset = ogSOffset;
             jumpsRemaining = maxJumps;
-
-            if (Input.GetButtonDown("Jump"))
-            {
-                Jump();
-            }
         }
         else
         {
             velocity.y -= gravity * Time.deltaTime;
             Controller.stepOffset = 0;
+        }//grav and jump reset
 
-            if (Input.GetButtonDown("Jump") && jumpsRemaining > 0)
-            {
-                Jump();
-                jumpsRemaining--;
-            }//if
-        }//jump input
-
-
-        if (Input.GetButtonDown("Fire1") && Time.time > lastDashTime + dashCooldown)
+        if (Input.GetButtonDown("Jump"))
         {
-            lastDashTime = Time.time;
+            Jump(false);
+            jumpsRemaining--;
+        }
+
+        if (dashCooldown < 2) {
+            dashCooldown += Time.deltaTime;
+            
+        }
+        visualCooldownDash.value = dashCooldown;
+
+        if (Input.GetButtonDown("Fire1") && dashCooldown >= 2)
+        {
             StartCoroutine(Dash());
         }//dash input
-        
-
         Controller.Move(velocity * Time.deltaTime);
     }//update
     
-    private void Jump()
-    {
-        velocity.y = Mathf.Sqrt(2 * jumpForce * gravity);
-        isGrounded = false;
+    public void Jump(bool isMush)
+    {   
+        int mushbonus = 0;
+        if (isMush)  {mushbonus = 10; jumpsRemaining --;}
+        if (jumpsRemaining >= 0 || isMush){
+            velocity.y = Mathf.Sqrt(2 * jumpForce * gravity + mushbonus);
+            isGrounded = false;
+        }
     }//jump
 
     private IEnumerator Dash()
     {
-        float originalSpeed = Speed;
-        Speed *= dashSpeedMultiplier;
-        dashlines.SetActive(true);
-        yield return new WaitForSeconds(dashDuration);
-        dashlines.SetActive(false);
-        Speed = originalSpeed;
+        if (dashCooldown >= 2) {
+            dashCooldown = 0;
+            float originalSpeed = Speed;
+            Speed *= dashSpeedMultiplier;
+            dashlines.SetActive(true);
+            yield return new WaitForSeconds(dashDuration);
+            dashlines.SetActive(false);
+            Speed = originalSpeed;
+        }
     }//dash
 
 
 
 
-    private void Jump() {
-            Movement.y = Mathf.Sqrt(2 * gravity * jumpForce);
-
-    }
 }
 
 
 
-bool isGrounded;
-float rayDist= 0.9f;
-
-isGrounded = Physics.Raycast(transform.position, Vector3.down, rayDist);
