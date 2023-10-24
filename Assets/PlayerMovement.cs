@@ -5,11 +5,17 @@ using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Particles")]
+    public ParticleSystem runDust;
+    public ParticleSystem jumpDust;
+
+    [Header("Movement")]
     CharacterController Controller;
     private float ogSOffset;
     public float Speed;
     public Transform Cam;
 
+    [Header("Jumping")]
     public float jumpForce = 5.0f; 
     public float gravity = 9.81f; // Gravity force
     public float groundedRaycastDistance = 0.9f; 
@@ -17,10 +23,9 @@ public class PlayerMovement : MonoBehaviour
     public int maxJumps = 2; //doesnt include initial jump
     private int jumpsRemaining;
     public mushJump MushJump;
-
     private Vector3 velocity;
 
-    //dash
+    [Header("Dash")]
     public float dashSpeedMultiplier = 2.0f; 
     public float dashDuration = 0.5f; 
     public float dashCooldown = 2.0f; 
@@ -28,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     public Slider visualCooldownDash;
     public LayerMask groundMask;
 
+    [Header("Animation")]
     public Animator rightLeg;
     public Animator leftLeg;
     public Transform modelFaceDir;
@@ -44,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
         float Horizontal = Input.GetAxis("Horizontal") * Speed * Time.deltaTime;
         float Vertical = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
         if ((Horizontal != 0 || Vertical != 0) && isGrounded) {
+            CreateDust();
             rightLeg.SetBool("isMoving", true);
             leftLeg.SetBool("isMoving", true);
         } else {
@@ -76,11 +83,15 @@ public class PlayerMovement : MonoBehaviour
             if (!MushJump.getInMush()) velocity.y = -0.5f;
             Controller.stepOffset = ogSOffset;
             jumpsRemaining = maxJumps;
+            rightLeg.SetBool("isJumping", false);
+            leftLeg.SetBool("isJumping", false);
         }
         else
         {
             velocity.y -= gravity * Time.deltaTime;
             Controller.stepOffset = 0;
+            rightLeg.SetBool("isJumping", true);
+            leftLeg.SetBool("isJumping", true);
         }//grav and jump reset
 
         if (Input.GetButtonDown("Jump"))
@@ -104,9 +115,12 @@ public class PlayerMovement : MonoBehaviour
     
     public void Jump(bool isMush)
     {   
+        
         int mushbonus = 0;
-        if (isMush)  {mushbonus = 10; jumpsRemaining --;}
-        if (jumpsRemaining >= 0 || isMush){
+        
+        if (jumpsRemaining >= 0){
+            if (isMush)  mushbonus = 10; 
+            else CreateJumpDust();
             velocity.y = Mathf.Sqrt(2 * jumpForce * gravity + mushbonus);
             isGrounded = false;
         }
@@ -125,7 +139,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }//dash
 
-
+    void CreateDust(){
+        runDust.Play();
+    }
+    void CreateJumpDust(){
+        jumpDust.Play();
+    }
 
 
 }

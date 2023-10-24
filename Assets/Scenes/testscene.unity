@@ -872,6 +872,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!198 &1566839197 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 5008122512083105398, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+  m_PrefabInstance: {fileID: 4110225949616619600}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1591973335
 GameObject:
   m_ObjectHideFlags: 0
@@ -1303,6 +1308,11 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!198 &2096953474 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4281736747194604918, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+  m_PrefabInstance: {fileID: 4110225949616619600}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4110225949616619600
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1311,6 +1321,30 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 282529105310313506, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.68274045
+      objectReference: {fileID: 0}
+    - target: {fileID: 282529105310313506, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.18402578
+      objectReference: {fileID: 0}
+    - target: {fileID: 282529105310313506, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.68274045
+      objectReference: {fileID: 0}
+    - target: {fileID: 282529105310313506, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.18402578
+      objectReference: {fileID: 0}
+    - target: {fileID: 282529105310313506, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -30.17
+      objectReference: {fileID: 0}
+    - target: {fileID: 3495398388960195443, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: m_Name
+      value: playermodel
+      objectReference: {fileID: 0}
     - target: {fileID: 4110225948106890304, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1364,9 +1398,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 751329572}
     - target: {fileID: 4110225948106890310, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: dust
+      value: 
+      objectReference: {fileID: 2096953474}
+    - target: {fileID: 4110225948106890310, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: runDust
+      value: 
+      objectReference: {fileID: 2096953474}
+    - target: {fileID: 4110225948106890310, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
       propertyPath: MushJump
       value: 
       objectReference: {fileID: 1710082144}
+    - target: {fileID: 4110225948106890310, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: jumpDust
+      value: 
+      objectReference: {fileID: 1566839197}
     - target: {fileID: 4110225948106890310, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
       propertyPath: dashlines
       value: 
@@ -1379,6 +1425,22 @@ PrefabInstance:
       propertyPath: visualCooldownDash
       value: 
       objectReference: {fileID: 1904221486}
+    - target: {fileID: 4281736747194604918, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: lengthInSec
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281736747194604918, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: ShapeModule.angle
+      value: 8.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281736747194604918, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 4281736747194604918, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 60
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: d7d3eab83c9f85142bb26fd09fee04a9, type: 3}

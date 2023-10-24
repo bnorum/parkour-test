@@ -28,7 +28,10 @@ public class CameraMove : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
- 
+        //zoom
+        distance += Input.mouseScrollDelta.y * 0.5f;
+        distance = Mathf.Clamp(distance, 2.0f, 20.0f);
+
         currentX += Input.GetAxis("Mouse X") * sensivity * Time.deltaTime;
         currentY += Input.GetAxis("Mouse Y") * -sensivity * Time.deltaTime;
  
