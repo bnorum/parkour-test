@@ -28,6 +28,10 @@ public class PlayerMovement : MonoBehaviour
     public Slider visualCooldownDash;
     public LayerMask groundMask;
 
+    public Animator rightLeg;
+    public Animator leftLeg;
+    public Transform modelFaceDir;
+
     void Start()
     {
         Controller = GetComponent<CharacterController>();
@@ -39,10 +43,20 @@ public class PlayerMovement : MonoBehaviour
         //movemnt
         float Horizontal = Input.GetAxis("Horizontal") * Speed * Time.deltaTime;
         float Vertical = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
+        if ((Horizontal != 0 || Vertical != 0) && isGrounded) {
+            rightLeg.SetBool("isMoving", true);
+            leftLeg.SetBool("isMoving", true);
+        } else {
+            rightLeg.SetBool("isMoving", false);
+            leftLeg.SetBool("isMoving", false);
+        }
 
         Vector3 Movement = Cam.transform.right * Horizontal + Cam.transform.forward * Vertical;
         Movement.y = 0f;
-        
+        if (Horizontal != 0 || Vertical != 0) {
+            modelFaceDir.rotation = Quaternion.LookRotation(Movement);
+            modelFaceDir.Rotate(0, 90, 0);
+        }
         Controller.Move(Movement);
 
         if (Movement.magnitude != 0f)

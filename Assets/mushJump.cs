@@ -15,22 +15,41 @@ public class mushJump : MonoBehaviour
     }
     void OnTriggerEnter (Collider other) 
 	{
-        inMush = true;
+        
         if (other.gameObject.tag == "Player") {
+            StartCoroutine(mushJiggle());
+            inMush = true;
             Debug.Log("boing");
             player.Jump(true);
         }
 	}
     void OnTriggerExit (Collider other) 
 	{
-        inMush = false;
+        if (other.gameObject.tag == "Player") {
+            inMush = false;
+        }
+        
 	}
     public bool getInMush() {
         return inMush;
     }
-    // Update is called once per frame
+    public bool jiggling = false;
+    public IEnumerator mushJiggle() {
+        jiggling = true;
+        yield return new WaitForSeconds(1f);
+        jiggling = false;
+
+    }
+    public MeshFilter mushMesh;
+    private float timer;
     void Update()
     {
         
+        timer += Time.deltaTime;
+        if (jiggling) {
+            mushMesh.transform.localScale = new Vector3(3,Mathf.Sin(timer*20)/4+ 1,3);
+        } else {
+            if (Mathf.Sin(timer*20)/4  == 0) mushMesh.transform.localScale = new Vector3(3,1,3);
+        }
     }
 }
