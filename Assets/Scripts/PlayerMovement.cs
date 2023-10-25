@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     private float ogSOffset;
     public float Speed;
     public Transform Cam;
+    private Vector3 Movement;
 
     [Header("Jumping")]
     public float jumpForce = 5.0f; 
@@ -25,23 +26,29 @@ public class PlayerMovement : MonoBehaviour
     public int maxJumps = 2; //doesnt include initial jump
     private int jumpsRemaining;
     public mushJump MushJump;
-    private Vector3 velocity;
+    private Vector3 vertVelocity;
 
-    public GameObject slamHitbox;
-    public float slamSpeed;
+    
 
     [Header("Dash")]
+    private bool isDashing = false;
     public float dashSpeedMultiplier = 2.0f; 
     public float dashDuration = 0.5f; 
     public float dashCooldown = 2.0f; 
     public GameObject dashlines;
     public Slider visualCooldownDash;
     public LayerMask groundMask;
+    [Header("Slam")]
+    public GameObject slamHitbox;
+    public float slamSpeed;
 
     [Header("Animation")]
     public Animator rightLeg;
     public Animator leftLeg;
     public Transform modelFaceDir;
+
+    [Header("Audio")]
+    public PlayerSound playerSound;
 
     void Start()
     {
@@ -64,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
             leftLeg.SetBool("isMoving", false);
         } //leg animation
 
-        Vector3 Movement = Cam.transform.right * Horizontal + Cam.transform.forward * Vertical; //w relation to camera
+        Movement = Cam.transform.right * Horizontal + Cam.transform.forward * Vertical; //w relation to camera
         Movement.y = 0f; //reset y bc camera has y value
 
         if (Horizontal != 0 || Vertical != 0) {
@@ -83,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
         }//character rotation
 
         bool isSlamming = Physics.Raycast(transform.position, Vector3.down, 1.2f);
-        if (isSlamming && velocity.y < -20) StartCoroutine(SlamFX());
+        if (isSlamming && vertVelocity.y < -20) StartCoroutine(SlamFX());
 
         
 
@@ -92,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRaycastDistance, groundMask);
         if (isGrounded)
         {
-            if (!MushJump.getInMush()) velocity.y = -0.5f;
+            if (!MushJump.getInMush()) vertVelocity.y = -0.5f;
             Controller.stepOffset = ogSOffset;
             jumpsRemaining = maxJumps;
             rightLeg.SetBool("isJumping", false);
@@ -100,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
         }//reset jumps
         else
         {
-            velocity.y -= gravity * Time.deltaTime;
+            vertVelocity.y -= gravity * Time.deltaTime;
             Controller.stepOffset = 0;
             rightLeg.SetBool("isJumping", true);
             leftLeg.SetBool("isJumping", true);
@@ -109,7 +116,6 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             Jump(false);
-            jumpsRemaining--;
         }
 
         if (dashCooldown < 2) dashCooldown += Time.deltaTime;
@@ -119,24 +125,24 @@ public class PlayerMovement : MonoBehaviour
     
         if(Input.GetButtonDown("Fire2") && !isGrounded) Slam();
             
-        Controller.Move(velocity * Time.deltaTime);
+        Controller.Move(vertVelocity * Time.deltaTime);
     }//update
     
     public void Jump(bool isMush)
     {   
-        
-        int mushbonus = 0;
-        
         if (jumpsRemaining >= 0){
+            int mushbonus = 0;
+            playerSound.PlayJumpSound(!isGrounded);
             if (!isGrounded) CreateJumpDust();
             if (isMush)  mushbonus = 10; 
-            velocity.y = Mathf.Sqrt(2 * jumpForce * gravity + mushbonus);
+            vertVelocity.y = Mathf.Sqrt(2 * jumpForce * gravity + mushbonus);
             isGrounded = false;
+            jumpsRemaining--;
         }
     }//jump
 
     public void Slam() {
-        velocity.y = -slamSpeed;
+        vertVelocity.y = -slamSpeed;
     }
     public IEnumerator SlamFX() {
         Debug.Log("Bang");
@@ -153,7 +159,9 @@ public class PlayerMovement : MonoBehaviour
             float originalSpeed = Speed;
             Speed *= dashSpeedMultiplier;
             dashlines.SetActive(true);
+            isDashing = true;
             yield return new WaitForSeconds(dashDuration);
+            isDashing = false;
             dashlines.SetActive(false);
             Speed = originalSpeed;
         }
@@ -166,6 +174,18 @@ public class PlayerMovement : MonoBehaviour
         jumpDust.Play();
     }
 
+    public float getVelX(){
+        return Movement.x;
+    }
+    public float getVelZ(){
+        return Movement.z;
+    }
+    public bool getIsGrounded(){
+        return isGrounded;
+    }
+    public bool getIsDashing(){
+        return isDashing;
+    }
 
 }
 
