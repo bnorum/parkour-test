@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     public ParticleSystem runDust;
     public ParticleSystem jumpDust;
 
+    public ParticleSystem slamDust;
+
     [Header("Movement")]
     CharacterController Controller;
     private float ogSOffset;
@@ -24,6 +26,9 @@ public class PlayerMovement : MonoBehaviour
     private int jumpsRemaining;
     public mushJump MushJump;
     private Vector3 velocity;
+
+    public GameObject slamHitbox;
+    public float slamSpeed;
 
     [Header("Dash")]
     public float dashSpeedMultiplier = 2.0f; 
@@ -49,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
         //movemnt
         float Horizontal = Input.GetAxis("Horizontal") * Speed * Time.deltaTime;
         float Vertical = Input.GetAxis("Vertical") * Speed * Time.deltaTime;
+
         if ((Horizontal != 0 || Vertical != 0) && isGrounded) {
             CreateDust();
             rightLeg.SetBool("isMoving", true);
@@ -56,26 +62,32 @@ public class PlayerMovement : MonoBehaviour
         } else {
             rightLeg.SetBool("isMoving", false);
             leftLeg.SetBool("isMoving", false);
-        }
+        } //leg animation
 
-        Vector3 Movement = Cam.transform.right * Horizontal + Cam.transform.forward * Vertical;
-        Movement.y = 0f;
+        Vector3 Movement = Cam.transform.right * Horizontal + Cam.transform.forward * Vertical; //w relation to camera
+        Movement.y = 0f; //reset y bc camera has y value
+
         if (Horizontal != 0 || Vertical != 0) {
             modelFaceDir.rotation = Quaternion.LookRotation(Movement);
             modelFaceDir.Rotate(0, 90, 0);
-        }
-        Controller.Move(Movement);
+        }//animate rotation
+        Controller.Move(Movement); //horizontal movement
 
         if (Movement.magnitude != 0f)
         {
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * Cam.GetComponent<CameraMove>().sensivity * Time.deltaTime);
-
             Quaternion CamRotation = Cam.rotation;
             CamRotation.x = 0f;
             CamRotation.z = 0f;
-
             transform.rotation = Quaternion.Lerp(transform.rotation, CamRotation, 0.1f);
         }//character rotation
+
+        bool isSlamming = Physics.Raycast(transform.position, Vector3.down, 1.2f);
+        if (isSlamming && velocity.y < -20) StartCoroutine(SlamFX());
+
+        
+
+
 
         isGrounded = Physics.Raycast(transform.position, Vector3.down, groundedRaycastDistance, groundMask);
         if (isGrounded)
@@ -85,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
             jumpsRemaining = maxJumps;
             rightLeg.SetBool("isJumping", false);
             leftLeg.SetBool("isJumping", false);
-        }
+        }//reset jumps
         else
         {
             velocity.y -= gravity * Time.deltaTime;
@@ -100,16 +112,13 @@ public class PlayerMovement : MonoBehaviour
             jumpsRemaining--;
         }
 
-        if (dashCooldown < 2) {
-            dashCooldown += Time.deltaTime;
-            
-        }
+        if (dashCooldown < 2) dashCooldown += Time.deltaTime;
         visualCooldownDash.value = dashCooldown;
 
-        if (Input.GetButtonDown("Fire1") && dashCooldown >= 2)
-        {
-            StartCoroutine(Dash());
-        }//dash input
+        if (Input.GetButtonDown("Fire1") && dashCooldown >= 2) StartCoroutine(Dash());
+    
+        if(Input.GetButtonDown("Fire2") && !isGrounded) Slam();
+            
         Controller.Move(velocity * Time.deltaTime);
     }//update
     
@@ -119,12 +128,23 @@ public class PlayerMovement : MonoBehaviour
         int mushbonus = 0;
         
         if (jumpsRemaining >= 0){
+            if (!isGrounded) CreateJumpDust();
             if (isMush)  mushbonus = 10; 
-            else CreateJumpDust();
             velocity.y = Mathf.Sqrt(2 * jumpForce * gravity + mushbonus);
             isGrounded = false;
         }
     }//jump
+
+    public void Slam() {
+        velocity.y = -slamSpeed;
+    }
+    public IEnumerator SlamFX() {
+        Debug.Log("Bang");
+        slamHitbox.SetActive(true);
+        slamDust.Play();
+        yield return new WaitForSeconds(.2f);
+        slamHitbox.SetActive(false);
+    }
 
     private IEnumerator Dash()
     {
@@ -148,6 +168,4 @@ public class PlayerMovement : MonoBehaviour
 
 
 }
-
-
 
