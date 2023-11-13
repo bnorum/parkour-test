@@ -772,7 +772,7 @@ MonoBehaviour:
   lookAt: {fileID: 250436462}
   Player: {fileID: 0}
   distance: 20
-  sensivity: 1200
+  sensivity: 600
 --- !u!81 &751329570
 AudioListener:
   m_ObjectHideFlags: 0
