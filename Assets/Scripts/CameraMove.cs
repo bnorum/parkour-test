@@ -10,8 +10,6 @@ public class CameraMove : MonoBehaviour
  
     public Transform lookAt;
  
-    public Transform Player;
- 
     public float distance = 10.0f;
     private float currentX = 0.0f;
     private float currentY = 0.0f;
